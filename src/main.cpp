@@ -1,5 +1,8 @@
 #include <iostream>
 #include <string>
+#include <vector>
+
+#include "./graph-implementations/GraphMatrix.h"
 
 #include "debug_mode.h"
 #include "manual_mode.h"
