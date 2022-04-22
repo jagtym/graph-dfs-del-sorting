@@ -7,4 +7,5 @@ void debug_mode()
     matrix.printEdges();
     matrix.printMatrix();
     matrix.printNexts();
+    matrix.printPrevs();
 }

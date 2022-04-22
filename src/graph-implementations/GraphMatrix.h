@@ -37,6 +37,23 @@ class GraphMatrix
             nexts.push_back(cnext);
         }
     }
+    
+    void loadPrevs(int edges_number)
+    {
+        for (int i = 0; i < edges_number; i++)
+        {
+            std::vector<int> cprev;
+            for (auto edge: edges)
+            {
+                if (edge[1] == i + 1)
+                {
+                    cprev.push_back(edge[0]);
+                }
+            }
+            std::sort(cprev.begin(), cprev.end());
+            prevs.push_back(cprev);
+        }
+    }
 
     void initializeMatrix(int vertices_number)
     {
@@ -61,6 +78,7 @@ class GraphMatrix
             loadEdges(edges_count);
             initializeMatrix(vertices_count);
             loadNexts(edges_count);
+            loadPrevs(edges_count);
         }
         
         void printEdges()
@@ -79,6 +97,20 @@ class GraphMatrix
             {
                 std::cout << i + 1 << ": ";
                 for (auto x: nexts[i])
+                {
+                    std::cout << x << " ";
+                }
+                std::cout << std::endl;
+            }
+        }
+
+        void printPrevs()
+        {
+            std::cout << std::endl << "prevs: " << std::endl;
+            for (int i = 0; i < prevs.size(); i++)
+            {
+                std::cout << i + 1 << ": ";
+                for (auto x: prevs[i])
                 {
                     std::cout << x << " ";
                 }
