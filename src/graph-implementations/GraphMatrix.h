@@ -6,6 +6,10 @@ class GraphMatrix
     std::vector<std::vector<int>> edges;
     std::vector<std::vector<int>> matrix;
 
+    std::vector<std::vector<int>> nexts;
+    std::vector<std::vector<int>> prevs;
+    std::vector<std::vector<int>> ninc;
+
     void loadEdges(int edges_number)
     {
         for (int i = 0; i < edges_number; i++)
@@ -14,6 +18,23 @@ class GraphMatrix
             std::cin >> from >> to;
             std::vector<int> edge = {from, to};
             edges.push_back(edge);
+        }
+    }
+
+    void loadNexts(int edges_number)
+    {
+        for (int i = 0; i < edges_number; i++)
+        {
+            std::vector<int> cnext;
+            for (auto edge: edges)
+            {
+                if (edge[0] == i + 1)
+                {
+                    cnext.push_back(edge[1]);
+                }
+            }
+            std::sort(cnext.begin(), cnext.end());
+            nexts.push_back(cnext);
         }
     }
 
@@ -39,6 +60,7 @@ class GraphMatrix
             std::cin >> edges_count;
             loadEdges(edges_count);
             initializeMatrix(vertices_count);
+            loadNexts(edges_count);
         }
         
         void printEdges()
@@ -47,6 +69,20 @@ class GraphMatrix
             for (auto edge: edges)
             {
                 std::cout << edge[0] << " " << edge[1] << std::endl;
+            }
+        }
+
+        void printNexts()
+        {
+            std::cout << std::endl << "nexts: " << std::endl;
+            for (int i = 0; i < nexts.size(); i++)
+            {
+                std::cout << i + 1 << ": ";
+                for (auto x: nexts[i])
+                {
+                    std::cout << x << " ";
+                }
+                std::cout << std::endl;
             }
         }
 
