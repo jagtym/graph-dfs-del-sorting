@@ -4,6 +4,6 @@ void debug_mode()
 
     GraphMatrix matrix = GraphMatrix();
     
-    std::cout << std::endl;
     matrix.printEdges();
+    matrix.printMatrix();
 }
