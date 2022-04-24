@@ -21,9 +21,9 @@ class GraphMatrix
         }
     }
 
-    void loadNexts(int edges_number)
+    void loadNexts(int vertices_number)
     {
-        for (int i = 0; i < edges_number; i++)
+        for (int i = 0; i < vertices_number; i++)
         {
             std::vector<int> cnext;
             for (auto edge: edges)
@@ -38,9 +38,9 @@ class GraphMatrix
         }
     }
     
-    void loadPrevs(int edges_number)
+    void loadPrevs(int vertices_number)
     {
-        for (int i = 0; i < edges_number; i++)
+        for (int i = 0; i < vertices_number; i++)
         {
             std::vector<int> cprev;
             for (auto edge: edges)
@@ -88,6 +88,83 @@ class GraphMatrix
         }
     }
 
+    void loadFirst()
+    {
+        for (int i = 0; i < vertices_count; i++)
+        {
+            if (nexts[i].size())
+            {
+                matrix[i][vertices_count] = nexts[i][0];
+            }
+            else
+            {
+                matrix[i][vertices_count] = 0;
+            }
+        }
+        for (auto edge: edges) {
+            matrix[edge[0] - 1][edge[1] - 1] = nexts[edge[0] - 1].back();
+        }
+    }
+
+    void loadSecond()
+    {
+        for (int i = 0; i < vertices_count; i++)
+        {
+            if (prevs[i].size())
+            {
+                matrix[i][vertices_count + 1] = prevs[i][0];
+            }
+            else
+            {
+                matrix[i][vertices_count + 1] = 0;
+            }
+        }
+        for (auto edge: edges) {
+            matrix[edge[1] - 1][edge[0] - 1] = prevs[edge[1] - 1].back() + vertices_count;
+        }
+    }
+
+    bool edgeExists(int i, int j) 
+    {
+        for (auto edge: edges) 
+        {
+            if (edge[0] == i && edge[1] == j) 
+            {
+                return true;
+            }
+            if (edge[0] == j && edge[1] == i) 
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    void loadThird()
+    {
+        for (int i = 0; i < vertices_count; i++)
+        {
+            if (ninc[i].size())
+            {
+                matrix[i][vertices_count + 2] = ninc[i][0];
+            }
+            else
+            {
+                matrix[i][vertices_count + 2] = 0;
+            }
+        }
+        for (int i = 0; i < vertices_count; i++)
+        {
+            for (int j = 0; j < vertices_count; j++)
+            {
+                if (!edgeExists(i + 1, j + 1))
+                {
+                    matrix[i][j] = -ninc[i].back();
+                }
+            }
+        }
+    }
+
     public:
         GraphMatrix()
         {
@@ -97,8 +174,12 @@ class GraphMatrix
             std::cin >> edges_count;
             loadEdges(edges_count);
             initializeMatrix(vertices_count);
-            loadNexts(edges_count);
-            loadPrevs(edges_count);
+            loadNexts(vertices_count);
+            loadPrevs(vertices_count);
+            loadNonInc(vertices_count);
+            loadFirst();
+            loadSecond();
+            loadThird();
         }
         
         void printEdges()
@@ -131,6 +212,20 @@ class GraphMatrix
             {
                 std::cout << i + 1 << ": ";
                 for (auto x: prevs[i])
+                {
+                    std::cout << x << " ";
+                }
+                std::cout << std::endl;
+            }
+        }
+
+        void printNonInc()
+        {
+            std::cout << std::endl << "non inc: " << std::endl;
+            for (int i = 0; i < ninc.size(); i++)
+            {
+                std::cout << i + 1 << ": ";
+                for (auto x: ninc[i])
                 {
                     std::cout << x << " ";
                 }

@@ -8,4 +8,7 @@ void debug_mode()
     matrix.printMatrix();
     matrix.printNexts();
     matrix.printPrevs();
+    matrix.printNonInc();
+
+    matrix.printMatrix();
 }
