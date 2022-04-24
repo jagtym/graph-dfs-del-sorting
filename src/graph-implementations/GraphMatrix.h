@@ -55,6 +55,26 @@ class GraphMatrix
         }
     }
 
+    void loadNonInc(int vertices_number) 
+    {
+        for (int i = 0; i < vertices_number; i++)
+        {
+            std::vector<int> cnonint;
+            for (int j = 1; j <= vertices_number; j++)
+            {
+                if (std::count(prevs[i].begin(), prevs[i].end(), j) <= 0) 
+                {
+                    if (std::count(nexts[i].begin(), nexts[i].end(), j) <= 0)
+                    {
+                        cnonint.push_back(j);
+                    }
+                }
+            }
+            std::sort(cnonint.begin(), cnonint.end());
+            ninc.push_back(cnonint); 
+        }
+    }
+
     void initializeMatrix(int vertices_number)
     {
         for (int i = 0; i < vertices_number; i++)
