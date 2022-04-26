@@ -2,22 +2,42 @@ class GraphMatrix
 {
     int vertices_count = 0;
     int edges_count = 0; 
+    bool has_cycle = false;
 
     std::vector<std::vector<int>> edges;
     std::vector<std::vector<int>> matrix;
-
+    std::list<int> *alt_edges;
     std::vector<std::vector<int>> nexts;
     std::vector<std::vector<int>> prevs;
     std::vector<std::vector<int>> ninc;
 
+    std::vector<int> kanh_sorted;
+
+
+    void kanhSort()
+    {
+        for (int i = 0; i < vertices_count; i++)
+        {
+            int checked = matrix[i][vertices_count + 1];
+            if (checked == 0) 
+            {
+                kanh_sorted.push_back(i);
+                matrix.erase(matrix.begin() + i);
+                break;
+            }
+        }
+    }
+
     void loadEdges(int edges_number)
     {
+        alt_edges = new std::list<int>[vertices_count + 1];
         for (int i = 0; i < edges_number; i++)
         {
             int from, to;
             std::cin >> from >> to;
             std::vector<int> edge = {from, to};
             edges.push_back(edge);
+            alt_edges[from].push_back(to);
         }
     }
 
@@ -165,6 +185,50 @@ class GraphMatrix
         }
     }
 
+    bool cycle(int v, bool visited[], bool stack[])
+    {
+
+        if (!visited[v])
+        {
+            visited[v] = true;
+            stack[v] = true;
+        }
+
+        std::list<int>::iterator i;
+        for (i = alt_edges[v].begin(); i != alt_edges[v].end(); ++i)
+        {
+            if (!visited[*i] && cycle(*i, visited, stack))
+            {
+                return true;
+            }
+            else if (stack[*i]) 
+            {
+                return true;
+            }
+        }
+        stack[v] = false;
+        return false;
+    }
+
+    bool hasCycle()
+    {
+        bool visited[vertices_count];
+        bool stack[vertices_count];
+        for (int i = 0; i < vertices_count; i++)
+        {
+            visited[i] = false;
+            stack[i] = false;
+        }
+
+        for (int i = 0; i < vertices_count; i++)
+        {
+            if (visited[i] == false && cycle(i, visited, stack)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public:
         GraphMatrix()
         {
@@ -180,6 +244,11 @@ class GraphMatrix
             loadFirst();
             loadSecond();
             loadThird();
+            if (hasCycle())
+            {
+                std::cout << "Matrix has cycle!";
+                has_cycle = true;
+            }
         }
         
         void printEdges()
@@ -244,5 +313,10 @@ class GraphMatrix
                 }
                 std::cout << std::endl;
             }
+        }
+
+        void sort_DEL()
+        {
+            kanhSort();
         }
 };
