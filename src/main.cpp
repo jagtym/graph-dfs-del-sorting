@@ -3,6 +3,8 @@
 #include <vector>
 #include <algorithm>
 #include <list>
+#include <deque>
+#include <stack>
 
 #include "./graph-implementations/GraphMatrix.h"
 

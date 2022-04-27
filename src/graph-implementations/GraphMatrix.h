@@ -10,21 +10,81 @@ class GraphMatrix
     std::vector<std::vector<int>> nexts;
     std::vector<std::vector<int>> prevs;
     std::vector<std::vector<int>> ninc;
+    std::vector<int> numbers;
+    std::vector<int> ex;
 
     std::vector<int> kanh_sorted;
+    std::vector<int> dfs_sorted;
 
-
-    void kanhSort()
+    void visit_dfs(int v, bool visited[], std::stack<int>& Stack)
     {
-        for (int i = 0; i < vertices_count; i++)
+        visited[v] = true;
+        std::list<int>::iterator i;
+        for (i = alt_edges[v].begin(); i != alt_edges[v].end(); ++i) 
         {
-            int checked = matrix[i][vertices_count + 1];
-            if (checked == 0) 
+            if (!visited[*i])
             {
-                kanh_sorted.push_back(i);
-                matrix.erase(matrix.begin() + i);
-                break;
+                visit_dfs(*i, visited, Stack);
             }
+        }
+        Stack.push(v);
+    }
+    
+    void dfs()
+    {
+        std::stack<int> Stack;
+
+        bool* visited = new bool[vertices_count];
+        for (int i = 0; i < vertices_count; i++)
+            visited[i] = false;
+
+        for (int i = 0; i < vertices_count; i++)
+            if (!visited[i])
+                visit_dfs(i, visited, Stack);
+
+        while (!Stack.empty()) {
+            std::cout << Stack.top() << " ";
+            Stack.pop();
+        }
+    }
+
+    void del()
+    {
+        int in_degree[vertices_count];
+        for (int i = 0; i < vertices_count; i++){
+            for (int j = 0; j < vertices_count; j++) {
+                if (1 + vertices_count <= matrix[i][j]) {
+                    in_degree[i] += 1;
+                }
+            }
+        }
+        std::deque<int> queue;
+        for (int i = 0; i < vertices_count; i++) {
+            if (in_degree[i] == 0) {
+                queue.push_front(i);
+            }
+        }
+
+        while (queue.size()) {
+            int num = queue.back();
+            queue.pop_back();
+            kanh_sorted.push_back(num);
+            for (auto n: nexts[num]) {
+                in_degree[n] -= 1;
+                if (in_degree[n] == 0)
+                {
+                    queue.push_front(n);
+                }
+            }
+        }
+    }
+
+
+    void loadNumbers(int vertices_number)
+    {
+        for (int i = 1; i <= vertices_number; i++)
+        {
+            numbers.push_back(i);
         }
     }
 
@@ -244,6 +304,7 @@ class GraphMatrix
             loadFirst();
             loadSecond();
             loadThird();
+            loadNumbers(vertices_count);
             if (hasCycle())
             {
                 std::cout << "Matrix has cycle!";
@@ -315,8 +376,36 @@ class GraphMatrix
             }
         }
 
+        void printSorted()
+        {
+            for (auto x: kanh_sorted) {
+                std::cout << x << " ";
+            }
+            std::cout << std::endl;
+        }
+
+        void sort_DFS()
+        {
+            if (!hasCycle()) 
+            {
+                dfs();
+            }
+            else
+            {
+                std::cout << "Graf ma cykl - sortowanie niemożliwe";
+            }
+        }
+
         void sort_DEL()
         {
-            kanhSort();
+            if (!hasCycle())
+            {
+                del();
+                printSorted();
+            }
+            else
+            {
+                std::cout << "Graf ma cykl - sortowanie niemożliwe";
+            }
         }
 };

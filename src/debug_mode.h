@@ -10,6 +10,6 @@ void debug_mode()
     matrix.printPrevs();
     matrix.printNonInc();
 
+    matrix.sort_DFS();
     matrix.sort_DEL();
-    matrix.printMatrix();
 }
