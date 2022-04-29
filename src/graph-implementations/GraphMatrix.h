@@ -267,7 +267,7 @@ public:
         loadNonInc(vertices_count);
         loadFirst();
         loadSecond();
-        loadThird();
+        // loadThird();
         loadNumbers(vertices_count);
         if (hasCycle()) {
             std::cout << "Matrix has cycle!";
@@ -332,7 +332,7 @@ public:
     }
 
     void sort_DFS() {
-        if (!hasCycle()) {
+        if (true) {
             std::cout << "dfs: " << std::endl;
             auto start = std::chrono::high_resolution_clock::now();
             dfs();
@@ -345,7 +345,7 @@ public:
     }
 
     void sort_DEL() {
-        if (!hasCycle()) {
+        if (true) {
             std::cout << "del: " << std::endl;
             auto start = std::chrono::high_resolution_clock::now();
             del();
