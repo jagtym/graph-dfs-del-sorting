@@ -39,10 +39,10 @@ class GraphMatrix {
         }
 
         while (!Stack.empty()) {
-            std::cout << Stack.top() << " ";
+            // std::cout << Stack.top() << " ";
             Stack.pop();
         }
-        std::cout << std::endl;
+        // std::cout << std::endl;
     }
 
     void del() {
@@ -334,7 +334,11 @@ public:
     void sort_DFS() {
         if (!hasCycle()) {
             std::cout << "dfs: " << std::endl;
+            auto start = std::chrono::high_resolution_clock::now();
             dfs();
+            auto stop = std::chrono::high_resolution_clock::now();
+            auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+            std::cout << "time: " << duration.count() << std::endl;
         } else {
             std::cout << "Graf ma cykl - sortowanie niemożliwe";
         }
@@ -343,8 +347,11 @@ public:
     void sort_DEL() {
         if (!hasCycle()) {
             std::cout << "del: " << std::endl;
+            auto start = std::chrono::high_resolution_clock::now();
             del();
-            printSorted();
+            auto stop = std::chrono::high_resolution_clock::now();
+            auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+            std::cout << "time: " << duration.count() << std::endl;
         } else {
             std::cout << "Graf ma cykl - sortowanie niemożliwe";
         }

@@ -14,3 +14,4 @@ GraphSorting
 data*.txt
 .idea
 cmake-build-debug
+.vscode

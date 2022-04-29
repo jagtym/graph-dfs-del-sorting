@@ -6,6 +6,7 @@
 #include <deque>
 #include <stack>
 #include <fstream>
+#include <chrono>
 
 #include "./graph-implementations/GraphMatrix.h"
 
