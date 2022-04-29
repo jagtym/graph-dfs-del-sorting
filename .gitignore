@@ -12,3 +12,5 @@ _deps
 
 GraphSorting
 data*.txt
+.idea
+cmake-build-debug

@@ -1,8 +1,8 @@
-void debug_mode()
+void debug_mode(bool file)
 {
     std::cout << "Debug mode running." << std::endl;
 
-    GraphMatrix matrix = GraphMatrix();
+    GraphMatrix matrix = GraphMatrix(file);
     
     matrix.printEdges();
     matrix.printMatrix();

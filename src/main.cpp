@@ -5,6 +5,7 @@
 #include <list>
 #include <deque>
 #include <stack>
+#include <fstream>
 
 #include "./graph-implementations/GraphMatrix.h"
 
@@ -13,18 +14,17 @@
 
 int main(int argc, char* argv[]) 
 {
-    if (argc != 2) 
+    if (argc != 2)
     {
         std::cout << "usage: GraphSorting <mode>" << std::endl;
         return 1;
     }
-
-    if (std::string(argv[1]) == "manual") 
-    {
-        manual_mode();
-    } 
     else if (std::string(argv[1]) == "debug")
     {
-        debug_mode();
+        debug_mode(false);
+    }
+    else if (std::string(argv[1]) == "file")
+    {
+        debug_mode(true);
     }
 }
