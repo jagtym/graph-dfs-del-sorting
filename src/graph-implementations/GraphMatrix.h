@@ -9,70 +9,9 @@ class GraphMatrix {
     std::vector<std::vector<int>> prevs;
     std::vector<std::vector<int>> ninc;
 
-    std::vector<int> kanh_sorted;
+    GraphLoader *loader;
+    GraphSorter *sorter;
 
-    void visit_dfs(int v, bool visited[], std::stack<int> &Stack) {
-        visited[v] = true;
-        std::list<int>::iterator i;
-        for (i = alt_edges[v].begin(); i != alt_edges[v].end(); ++i) {
-            if (!visited[*i]) {
-                visit_dfs(*i, visited, Stack);
-            }
-        }
-        if (v != 0) {
-            Stack.push(v);
-        }
-    }
-
-    void dfs() {
-        std::stack<int> Stack;
-
-        bool *visited = new bool[vertices_count + 1];
-        for (int i = 1; i <= vertices_count; i++) {
-            visited[i] = false;
-        }
-        for (int i = 1; i <= vertices_count; i++) {
-            if (!visited[i]) {
-                visit_dfs(i, visited, Stack);
-            }
-        }
-
-        while (!Stack.empty()) {
-            // std::cout << Stack.top() << " ";
-            Stack.pop();
-        }
-        // std::cout << std::endl;
-    }
-
-    void del() {
-        std::vector<int> in_degree(vertices_count);
-        for (int i = 0; i < vertices_count; i++) {
-            for (int j = 0; j < vertices_count; j++) {
-                if (1 + vertices_count <= matrix[i][j]) {
-                    in_degree[i] += 1;
-                }
-            }
-        }
-        std::deque<int> queue;
-        for (int i = 0; i < vertices_count; i++) {
-            if (in_degree[i] == 0) {
-                queue.push_front(i + 1);
-            }
-        }
-
-        while (!queue.empty()) {
-            int num = queue.back();
-            queue.pop_back();
-            kanh_sorted.push_back(num);
-            for (auto n: nexts[num - 1]) {
-                in_degree[n - 1] -= 1;
-                if (in_degree[n - 1] == 0) {
-                    queue.push_front(n);
-                }
-            }
-        }
-    }
-    
     void loadNexts(int vertices_number) {
         for (int i = 0; i < vertices_number; i++) {
             std::vector<int> cnext;
@@ -217,9 +156,10 @@ class GraphMatrix {
 public:
 
     GraphMatrix(bool file) {
-        GraphLoader loader = GraphLoader(vertices_count, edges_count, graph_edges, file);
-        loader.loadGraph();
-        alt_edges = loader.getAlternativeEdges();
+        loader = new GraphLoader(vertices_count, edges_count, graph_edges, file);
+        sorter = new GraphSorter(vertices_count, nexts, matrix, alt_edges);
+        loader -> loadGraph();
+        alt_edges = loader -> getAlternativeEdges();
 
         initializeMatrix(vertices_count);
         loadNexts(vertices_count);
@@ -284,18 +224,18 @@ public:
         }
     }
 
-    void printSorted() {
-        for (auto x: kanh_sorted) {
-            std::cout << x << " ";
-        }
-        std::cout << std::endl;
-    }
+    // void printSorted() {
+    //     for (auto x: kanh_sorted) {
+    //         std::cout << x << " ";
+    //     }
+    //     std::cout << std::endl;
+    // }
 
     void sort_DFS() {
         if (true) {
             std::cout << "dfs: " << std::endl;
             auto start = std::chrono::high_resolution_clock::now();
-            dfs();
+            sorter -> dfsSort();
             auto stop = std::chrono::high_resolution_clock::now();
             auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
             std::cout << "time: " << duration.count() << std::endl;
@@ -308,7 +248,7 @@ public:
         if (true) {
             std::cout << "del: " << std::endl;
             auto start = std::chrono::high_resolution_clock::now();
-            del();
+            sorter -> delSort();
             auto stop = std::chrono::high_resolution_clock::now();
             auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
             std::cout << "time: " << duration.count() << std::endl;
