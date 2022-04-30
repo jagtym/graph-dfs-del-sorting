@@ -2,8 +2,8 @@ class GraphLoader {
     bool fromFile_;
     std::string fileName_ = "dane.txt";
 
-    int verticesCount_;
-    int edgesCount_;
+    int &verticesCount_;
+    int &edgesCount_;
     
     std::vector<std::vector<int>> &graphEdges_;
     std::list<int> *alternativeEdges_;
@@ -22,7 +22,6 @@ class GraphLoader {
 
         int from, to;
         while (file >> from >> to) {
-            std::cout << from << " " << to << std::endl;
             std::vector<int> edge = {from, to};
             graphEdges_.push_back(edge);
             alternativeEdges_[from].push_back(to);
@@ -51,13 +50,12 @@ class GraphLoader {
     }
 
     public:
-        GraphLoader(int &verticesCount, int &edgesCount, std::vector<std::vector<int>> &graphEdges, std::list<int> *alternativeEdges, bool fromFile) 
-        : graphEdges_(graphEdges)
+        GraphLoader(int &verticesCount, int &edgesCount, std::vector<std::vector<int>> &graphEdges, bool fromFile) 
+        : graphEdges_(graphEdges),
+          verticesCount_(verticesCount),
+          edgesCount_(edgesCount)
         {
             fromFile_ = fromFile;
-            verticesCount_ = verticesCount;
-            edgesCount_ = edgesCount;
-            alternativeEdges_ = alternativeEdges;
         }
 
         void loadGraph() {
@@ -66,5 +64,9 @@ class GraphLoader {
             } else {
                 loadFromUI();
             }
+        }
+
+        std::list<int>* getAlternativeEdges() {
+            return alternativeEdges_;
         }
 };

@@ -72,36 +72,7 @@ class GraphMatrix {
             }
         }
     }
-
-    // void loadEdgesFile() {
-    //     std::ifstream f;
-    //     f.open("dane.txt");
-    //     if (!f.is_open()) {
-    //         std::cout << "error" << std::endl;
-    //         return;
-    //     }
-    //     f >> vertices_count >> edges_count;
-    //     alt_edges = new std::list<int>[vertices_count + 1];
-    //     for (int i = 0; i < edges_count; i++) {
-    //         int from, to;
-    //         f >> from >> to;
-    //         std::vector<int> edge = {from, to};
-    //         graph_edges.push_back(edge);
-    //         alt_edges[from].push_back(to);
-    //     }
-    // }
-
-    // void loadEdges(int edges_number) {
-    //     alt_edges = new std::list<int>[vertices_count + 1];
-    //     for (int i = 0; i < edges_number; i++) {
-    //         int from, to;
-    //         std::cin >> from >> to;
-    //         std::vector<int> edge = {from, to};
-    //         graph_edges.push_back(edge);
-    //         alt_edges[from].push_back(to);
-    //     }
-    // }
-
+    
     void loadNexts(int vertices_number) {
         for (int i = 0; i < vertices_number; i++) {
             std::vector<int> cnext;
@@ -246,14 +217,15 @@ class GraphMatrix {
 public:
 
     GraphMatrix(bool file) {
-        GraphLoader loader = GraphLoader(vertices_count, edges_count, graph_edges, alt_edges, file);
+        GraphLoader loader = GraphLoader(vertices_count, edges_count, graph_edges, file);
         loader.loadGraph();
+        alt_edges = loader.getAlternativeEdges();
 
-        // initializeMatrix(vertices_count);
-        // loadNexts(vertices_count);
-        // loadPrevs(vertices_count);
+        initializeMatrix(vertices_count);
+        loadNexts(vertices_count);
+        loadPrevs(vertices_count);
         // loadNonInc(vertices_count);
-        // loadFirst();
+        loadFirst();
         // loadSecond();
         // loadThird();
         // loadNumbers(vertices_count);
