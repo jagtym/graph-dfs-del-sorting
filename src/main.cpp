@@ -8,6 +8,8 @@
 #include <fstream>
 #include <chrono>
 
+#include "./graph-implementations/GraphLoader.h"
+#include "./graph-implementations/GraphSorter.h"
 #include "./graph-implementations/GraphMatrix.h"
 
 #include "debug_mode.h"

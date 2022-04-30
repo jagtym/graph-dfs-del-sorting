@@ -2,13 +2,12 @@ class GraphMatrix {
     int vertices_count = 0;
     int edges_count = 0;
 
-    std::vector<std::vector<int>> edges;
+    std::vector<std::vector<int>> graph_edges;
     std::vector<std::vector<int>> matrix;
     std::list<int> *alt_edges;
     std::vector<std::vector<int>> nexts;
     std::vector<std::vector<int>> prevs;
     std::vector<std::vector<int>> ninc;
-    std::vector<int> numbers;
 
     std::vector<int> kanh_sorted;
 
@@ -74,46 +73,39 @@ class GraphMatrix {
         }
     }
 
+    // void loadEdgesFile() {
+    //     std::ifstream f;
+    //     f.open("dane.txt");
+    //     if (!f.is_open()) {
+    //         std::cout << "error" << std::endl;
+    //         return;
+    //     }
+    //     f >> vertices_count >> edges_count;
+    //     alt_edges = new std::list<int>[vertices_count + 1];
+    //     for (int i = 0; i < edges_count; i++) {
+    //         int from, to;
+    //         f >> from >> to;
+    //         std::vector<int> edge = {from, to};
+    //         graph_edges.push_back(edge);
+    //         alt_edges[from].push_back(to);
+    //     }
+    // }
 
-    void loadNumbers(int vertices_number) {
-        for (int i = 1; i <= vertices_number; i++) {
-            numbers.push_back(i);
-        }
-    }
-
-    void loadEdgesFile() {
-        std::ifstream f;
-        f.open("dane.txt");
-        if (!f.is_open()) {
-            std::cout << "error" << std::endl;
-            return;
-        }
-        f >> vertices_count >> edges_count;
-        alt_edges = new std::list<int>[vertices_count + 1];
-        for (int i = 0; i < edges_count; i++) {
-            int from, to;
-            f >> from >> to;
-            std::vector<int> edge = {from, to};
-            edges.push_back(edge);
-            alt_edges[from].push_back(to);
-        }
-    }
-
-    void loadEdges(int edges_number) {
-        alt_edges = new std::list<int>[vertices_count + 1];
-        for (int i = 0; i < edges_number; i++) {
-            int from, to;
-            std::cin >> from >> to;
-            std::vector<int> edge = {from, to};
-            edges.push_back(edge);
-            alt_edges[from].push_back(to);
-        }
-    }
+    // void loadEdges(int edges_number) {
+    //     alt_edges = new std::list<int>[vertices_count + 1];
+    //     for (int i = 0; i < edges_number; i++) {
+    //         int from, to;
+    //         std::cin >> from >> to;
+    //         std::vector<int> edge = {from, to};
+    //         graph_edges.push_back(edge);
+    //         alt_edges[from].push_back(to);
+    //     }
+    // }
 
     void loadNexts(int vertices_number) {
         for (int i = 0; i < vertices_number; i++) {
             std::vector<int> cnext;
-            for (auto edge: edges) {
+            for (auto edge: graph_edges) {
                 if (edge[0] == i + 1) {
                     cnext.push_back(edge[1]);
                 }
@@ -126,7 +118,7 @@ class GraphMatrix {
     void loadPrevs(int vertices_number) {
         for (int i = 0; i < vertices_number; i++) {
             std::vector<int> cprev;
-            for (auto edge: edges) {
+            for (auto edge: graph_edges) {
                 if (edge[1] == i + 1) {
                     cprev.push_back(edge[0]);
                 }
@@ -169,7 +161,7 @@ class GraphMatrix {
                 matrix[i][vertices_count] = 0;
             }
         }
-        for (auto edge: edges) {
+        for (auto edge: graph_edges) {
             matrix[edge[0] - 1][edge[1] - 1] = nexts[edge[0] - 1].back();
         }
     }
@@ -182,13 +174,13 @@ class GraphMatrix {
                 matrix[i][vertices_count + 1] = 0;
             }
         }
-        for (auto edge: edges) {
+        for (auto edge: graph_edges) {
             matrix[edge[1] - 1][edge[0] - 1] = prevs[edge[1] - 1].back() + vertices_count;
         }
     }
 
     bool edgeExists(int i, int j) {
-        for (auto edge: edges) {
+        for (auto edge: graph_edges) {
             if (edge[0] == i && edge[1] == j) {
                 return true;
             }
@@ -253,30 +245,26 @@ class GraphMatrix {
 
 public:
 
-
     GraphMatrix(bool file) {
-        if (file == true) {
-            loadEdgesFile();
-        } else {
-            loadEdges(edges_count);
-        }
+        GraphLoader loader = GraphLoader(vertices_count, edges_count, graph_edges, alt_edges, file);
+        loader.loadGraph();
 
-        initializeMatrix(vertices_count);
-        loadNexts(vertices_count);
-        loadPrevs(vertices_count);
-        loadNonInc(vertices_count);
-        loadFirst();
-        loadSecond();
+        // initializeMatrix(vertices_count);
+        // loadNexts(vertices_count);
+        // loadPrevs(vertices_count);
+        // loadNonInc(vertices_count);
+        // loadFirst();
+        // loadSecond();
         // loadThird();
-        loadNumbers(vertices_count);
-        if (hasCycle()) {
+        // loadNumbers(vertices_count);
+        if (false) {
             std::cout << "Matrix has cycle!";
         }
     }
 
     void printEdges() {
-        std::cout << std::endl << "edges: " << std::endl;
-        for (auto edge: edges) {
+        std::cout << std::endl << "graph_edges: " << std::endl;
+        for (auto edge: graph_edges) {
             std::cout << edge[0] << " " << edge[1] << std::endl;
         }
     }
